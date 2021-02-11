@@ -4,6 +4,10 @@
 
 int main(){
     Deck deck;
-    deck.createDeck();
+    deck.deckInitialization();
+    
+
 
 }
+
+

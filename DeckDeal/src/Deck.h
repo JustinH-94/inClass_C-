@@ -1,5 +1,7 @@
 #include <vector>
 #include <string>
+#include<iostream>
+#include<algorithm>
 class Deck{
     public:
         enum Face {A, two, three, four, five, six, seven, eight, nine, ten, J, Q, K };
@@ -20,8 +22,7 @@ class Deck{
 
         int euchreDeckSize = 24;
 
-        void createDeck(){
-            CardDeck deck;
+        void createDeck(CardDeck& deck){
             for(int i = 0; i < deck.mainDeckSize; i++){
                 Card card;
                 for(int j = 0; j < card.numSuits; j++){
@@ -32,6 +33,24 @@ class Deck{
                     }
                 }
             }
+        }
+
+        void displayDeck(const CardDeck& deck){
+            for (Card c : deck.cards){
+                // if(c.suit= S){
+
+                // }
+                // else if(c.suit = C){
+
+                // }
+                std::cout << "The card is: " << c.face << " " << c.suit <<std::endl;
+            }
+        }
+
+        void deckInitialization(){
+            CardDeck deck;
+            createDeck(deck);
+            displayDeck(deck);
         }
 
 };
