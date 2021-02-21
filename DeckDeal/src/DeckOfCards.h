@@ -29,9 +29,10 @@ class DeckOfCards{
                 }
         }
 
-        void initializingDeck(std::string face[], std::string suit[], int MAX_FACE_COUNT, int MAX_SUIT_COUNT){
+        std::vector<Card> initializingDeck(std::string face[], std::string suit[], int MAX_FACE_COUNT, int MAX_SUIT_COUNT){
             settingDeck(face, suit, MAX_SUIT_COUNT, MAX_FACE_COUNT);
             std::random_shuffle(std::begin(cardDeck),std::end(cardDeck));
             displayDeck(cardDeck);
+            return cardDeck;
         }
 };
