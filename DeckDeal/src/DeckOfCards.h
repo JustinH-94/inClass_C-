@@ -10,7 +10,7 @@ class DeckOfCards{
             std::string suit;
             std::string face;
         };
-
+        //Card TrumpCard;
         std::vector<Card> cardDeck;
 
         void displayDeck(std::vector<Card> const &cardDeck){
@@ -33,6 +33,13 @@ class DeckOfCards{
             settingDeck(face, suit, MAX_SUIT_COUNT, MAX_FACE_COUNT);
             std::random_shuffle(std::begin(cardDeck),std::end(cardDeck));
             displayDeck(cardDeck);
+            return cardDeck;
+        }
+        std::vector<Card> TopSuit(std::vector<Card> cardDeck){
+            for(Card c : cardDeck){
+                std::cout << c.suit << std::endl;
+                return cardDeck;
+            }
             return cardDeck;
         }
 };

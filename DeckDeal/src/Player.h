@@ -33,5 +33,9 @@ class Player : PlayerHand, Dealer{
                 std::cout << c.face<< " " << c.suit << std::endl;
             }
         }
+
+        std::vector<DeckOfCards::Card> ReturnHand(){
+            return my_Hand;
+        }
 };
 
