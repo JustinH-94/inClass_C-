@@ -34,6 +34,10 @@ class Player : PlayerHand, Dealer{
             }
         }
 
+        void ClearHand(){
+            my_Hand.clear();
+        }
+
         std::vector<DeckOfCards::Card> ReturnHand(){
             return my_Hand;
         }

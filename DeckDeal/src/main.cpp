@@ -20,6 +20,10 @@ Player p4;
 float p1Rank, p2Rank, p3Rank, p4Rank;
 
 std::string TrumpSuit;
+std::string secondBestSuit;
+std::string playerPlay;
+
+bool play = true;
 
 std::vector<DeckOfCards::Card> Deal3Cards(std::vector<DeckOfCards::Card> cardDeck){
     for(int j = 0; j < 3; j++){
@@ -69,12 +73,34 @@ void showHand(){
     std::cout<< std::endl;
     p2.showMyHand();
     std::cout<< std::endl;
+    std::cout<< std::endl;
+    p3.showMyHand();
+    std::cout<< std::endl;
+    p4.showMyHand();
+    std::cout<< std::endl;
+
+}
+
+void setSecondBestSuit(std::string TrumpSuit){
+    if(TrumpSuit == "Spades"){
+        secondBestSuit = "Clubs";
+    }
+    if(TrumpSuit == "Clubs"){
+        secondBestSuit = "Spades";
+    }
+    if(TrumpSuit == "Hearts"){
+        secondBestSuit = "Diamonds";
+    }
+    if(TrumpSuit == "Diamonds"){
+        secondBestSuit = "Hearts";
+    }
 
 }
 
 std::vector<DeckOfCards::Card> TopSuit(std::vector<DeckOfCards::Card> cardDeck){
     for(DeckOfCards::Card c : cardDeck){      
                 TrumpSuit = c.suit;
+                setSecondBestSuit(TrumpSuit);
                 cardDeck.erase(cardDeck.begin());
                 return cardDeck;
             }
@@ -84,54 +110,124 @@ std::vector<DeckOfCards::Card> TopSuit(std::vector<DeckOfCards::Card> cardDeck){
 float SetRank(std::vector<DeckOfCards::Card> hand){
     float rankScore = 0;
     for(DeckOfCards::Card c : hand){
-        if(c.suit == TrumpSuit){
-            rankScore++;
-        }
-        else{
-            rankScore += 0.5f;
+        for(DeckOfCards::Card t : deck.bestHand){
+            if (c.face == t.face && t.suit == c.suit && c.face == "Jack")
+            {
+                rankScore += 0.50;
+            }
+            else if(c.face == t.face && t.suit == c.suit && c.face != "Jack"){
+                rankScore += 0.25;
+            }
         }
     }
     return rankScore;
 }
 
+bool BustOrRedeal(float rank){
+    if(rank >= 0.75){
+        return true;
+    }
+    return false;
+}
+
 void HandRank(){
+    bool playTrump = false;
     for(int i = 0; i < 4; i++){
-                if(i == 0){
-                    tempHand = p1.ReturnHand();
-                    p1Rank = SetRank(tempHand);
-                }
-                else if(i == 1){
-                    tempHand = p2.ReturnHand();
-                    p2Rank = SetRank(tempHand);
-                }
-                else if(i == 2){
-                    tempHand = p3.ReturnHand();
-                    p3Rank = SetRank(tempHand);
-                }
-                else if(i == 3){
-                    tempHand = p4.ReturnHand();
-                    p4Rank = SetRank(tempHand);
-                }
-                tempHand.clear();
-            }
+        if(i == 0){
+            tempHand = p1.ReturnHand();
+            p1Rank = SetRank(tempHand);
+            std::cout << p1Rank << "p1" <<std::endl;
+            playTrump = BustOrRedeal(p1Rank);
+        }
+        else if(i == 1){
+            tempHand = p2.ReturnHand();
+            p2Rank = SetRank(tempHand);
+            std::cout << p2Rank << "p2"<<std::endl;
+            playTrump = BustOrRedeal(p2Rank);
+        }
+        else if(i == 2){
+            tempHand = p3.ReturnHand();
+            p3Rank = SetRank(tempHand);
+            std::cout << p3Rank << "p3"<<std::endl;
+            playTrump = BustOrRedeal(p3Rank);
+        }
+        else if(i == 3){
+            tempHand = p4.ReturnHand();
+            p4Rank = SetRank(tempHand);
+            std::cout << p4Rank << "p4"<<std::endl;
+            playTrump = BustOrRedeal(p4Rank);
+        }
+        tempHand.clear();
+        if(playTrump){
+            std::cout << TrumpSuit << " is being played" << std::endl;
+            break;
+        }
+    }
 } 
 
+void SetBestHand(){
+    for(int i = 0; i < 7; i++){
+        DeckOfCards::Card card;
+        if(i == 0){
+            card = {TrumpSuit, "Jack"};
+            
+        } else if (i == 1){
+            card = {secondBestSuit, "Jack"};
+        }
+        else if (i == 2){
+            card = {TrumpSuit, "Ace"};
+        }
+        else if (i == 3){
+            card = {TrumpSuit, "King"};
+        }
+        else if (i == 4){
+            card = {TrumpSuit, "Queen"};
+        }
+        else if (i == 5){
+            card = {TrumpSuit, "10"};
+        }
+        else if (i == 6){
+            card = {TrumpSuit, "9"}; 
+        }
+        deck.settingBestHand(card);
+    }
+}
 
+bool PlayGame(){
+    std::cout << "Play a new game of Euchre? (Enter 1: yes, Enter 2: no)" << std::endl;
+    std::cin >> playerPlay;
+    if(playerPlay =="1"){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+void ClearHands(){
+    p1.ClearHand();
+    p2.ClearHand();
+    p3.ClearHand();
+    p4.ClearHand();
+}
 
 
 int main(){
 
     std::string face[MAX_FACE_COUNT] ={"Ace","9","10","Jack","Queen","King"};
     std::string suit[MAX_SUIT_COUNT] = {"Spades","Hearts","Diamonds","Clubs"};
-    
-    cardDeck = deck.initializingDeck(face, suit, MAX_FACE_COUNT, MAX_SUIT_COUNT);
+    while(PlayGame()){
+        ClearHands();
+        cardDeck = deck.initializingDeck(face, suit, MAX_FACE_COUNT, MAX_SUIT_COUNT);
 
-    cardDeck = Deal3Cards(cardDeck);
-    cardDeck = Deal2Cards(cardDeck);
-    showHand();
-    cardDeck = TopSuit(cardDeck);
-    HandRank();
-    std::cout << p1Rank << " " << p2Rank << std::endl;
+        cardDeck = Deal3Cards(cardDeck);
+        cardDeck = Deal2Cards(cardDeck);
+        showHand();
+        cardDeck = TopSuit(cardDeck);
+        SetBestHand();
+        HandRank();
+
+    }
 
     
     return 0;

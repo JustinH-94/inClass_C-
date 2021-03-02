@@ -12,6 +12,7 @@ class DeckOfCards{
         };
         //Card TrumpCard;
         std::vector<Card> cardDeck;
+        std::vector<Card> bestHand;
 
         void displayDeck(std::vector<Card> const &cardDeck){
             for(Card c : cardDeck){
@@ -29,7 +30,13 @@ class DeckOfCards{
                 }
         }
 
+        void settingBestHand(Card card){
+            bestHand.push_back(card);
+        }
+
         std::vector<Card> initializingDeck(std::string face[], std::string suit[], int MAX_FACE_COUNT, int MAX_SUIT_COUNT){
+            cardDeck.clear();
+            bestHand.clear();
             settingDeck(face, suit, MAX_SUIT_COUNT, MAX_FACE_COUNT);
             std::random_shuffle(std::begin(cardDeck),std::end(cardDeck));
             displayDeck(cardDeck);
