@@ -4,7 +4,7 @@
 
 std::string GetNum(){
     std::string numString;
-    std::cout << "Enter a number: " << std::endl;
+    std::cout << "Enter a number: ";
     std::cin >> numString;
     return numString;
 }
