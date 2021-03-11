@@ -11,6 +11,7 @@ class PlayerHand{
 
 class Dealer{
     protected:
+        int placePos;
         bool isDealer;
 };
 
@@ -34,12 +35,24 @@ class Player : PlayerHand, Dealer{
             }
         }
 
+        void SetPlacePos(int num){
+            placePos = num;
+        }
+
         void ClearHand(){
             my_Hand.clear();
         }
 
         std::vector<DeckOfCards::Card> ReturnHand(){
             return my_Hand;
+        }
+
+        void NewDealer(){
+            isDealer = true;
+        }
+
+        void NotDealer(){
+            isDealer = false;
         }
 };
 
