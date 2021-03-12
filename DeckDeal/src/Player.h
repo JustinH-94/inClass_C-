@@ -54,5 +54,56 @@ class Player : PlayerHand, Dealer{
         void NotDealer(){
             isDealer = false;
         }
+
+        int set(std::string suit, std::string face){
+            for(int i = 0; i < 5; i++){
+                if(my_Hand[i].face == face && my_Hand[i].suit == suit){
+                    return i;
+                }
+            }
+            return 0;
+        }
+
+        std::string SetTrumpSuit(){
+            int H = 0, D = 0, S = 0, C = 0;
+            for(DeckOfCards::Card c : my_Hand){
+                if(c.suit == "Hearts"){
+                    if(c.face == "Jack"){
+                        my_Hand.erase(my_Hand.begin() + set(c.suit, c.face));
+                        return "Hearts";
+                    }
+                    H++;
+                } else if(c.suit == "Diamonds"){
+                    if(c.face == "Jack"){
+                        my_Hand.erase(my_Hand.begin() + set(c.suit, c.face));
+                        return "Diamonds";
+                    }
+                    D++;
+                } else if(c.suit == "Spades"){
+                    if(c.face == "Jack"){
+                        my_Hand.erase(my_Hand.begin() + set(c.suit, c.face));
+                        return "Spades";
+                    }
+                    S++;
+                } else if(c.suit == "Clubs"){
+                    if(c.face == "Jack"){
+                        my_Hand.erase(my_Hand.begin() + set(c.suit, c.face));
+                        return "Clubs";
+                    }
+                    C++; 
+                }
+            }
+
+            if(H + D > S + C && H > D) 
+                return "Hearts";
+            else if(D + H > S + C && D > H)
+                return "Diamonds";
+            else if(D + H < S + C && S > C)
+                return "Spades";
+            else if(D + H < S + C && C > S)
+                return "Clubs";
+
+            return "";
+        }
 };
 

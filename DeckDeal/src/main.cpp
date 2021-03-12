@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <random>
+#include <sstream>
 #include "DeckOfCards.h"
 #include "Player.h"
 
@@ -25,6 +26,7 @@ std::string playerPlay;
 
 bool play = true;
 bool isTrumpSet = false;
+bool allPlayersHaveCards = true;
 
 std::vector<DeckOfCards::Card> Deal3Cards(std::vector<DeckOfCards::Card> cardDeck){
     for(int j = 0; j < 3; j++){
@@ -260,18 +262,26 @@ void NextPlayerSetTrump(int TrumpSetter){
         TrumpSetter = 1;
     }
     if(TrumpSetter == 1){
-
+        TrumpSuit = p1.SetTrumpSuit();
     }
-    std::cout<<"This" <<std::endl;
+    if(TrumpSetter == 2){
+        TrumpSuit = p2.SetTrumpSuit();
+    }
+    if(TrumpSetter == 3){
+        TrumpSuit = p3.SetTrumpSuit();
+    }
+    if(TrumpSetter == 4){
+        TrumpSuit = p4.SetTrumpSuit();
+    }
 }
-
 
 int main(){
 
     std::string face[MAX_FACE_COUNT] ={"Ace","9","10","Jack","Queen","King"};
     std::string suit[MAX_SUIT_COUNT] = {"Spades","Hearts","Diamonds","Clubs"};
-    int dealerVal = 1;
     while(PlayGame()){
+        int dealerVal = 1;
+        int temp = dealerVal;
         ClearHands();
         cardDeck = deck.initializingDeck(face, suit, MAX_FACE_COUNT, MAX_SUIT_COUNT);
         SetDealer(dealerVal);
@@ -279,13 +289,21 @@ int main(){
         showHand();
         cardDeck = TopSuit(cardDeck);
         SetBestHand();
-        std:: cout << "The Shown Top Suit is: " << TrumpSuit << std::endl;
+        
         HandRank(dealerVal);
 
-        if(!isTrumpSet){
-            NextPlayerSetTrump(dealerVal);
-        }
         
+
+        while(allPlayersHaveCards){
+            if(!isTrumpSet){
+            std::cout << "No one trumped. Player " << temp++ << " is picking next trump." << std::endl;
+            NextPlayerSetTrump(dealerVal);            
+        }
+            SetBestHand();
+            std:: cout << "The Shown Top Suit is: " << TrumpSuit << std::endl;   
+            allPlayersHaveCards = false;
+        }
+
         
 
         dealerVal++;
