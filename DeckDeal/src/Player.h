@@ -64,6 +64,20 @@ class Player : PlayerHand, Dealer{
             return 0;
         }
 
+        void EraseCard(std::string suit){
+            for( DeckOfCards::Card c : my_Hand){
+                if(c.suit == suit){
+                    my_Hand.erase(my_Hand.begin() + set(c.suit, c.face));
+                }
+            }
+        }
+
+        void PlayCard(std::string TrumpSuit){
+            for(DeckOfCards::Card c : my_Hand){
+                
+            }
+        }
+
         std::string SetTrumpSuit(){
             int H = 0, D = 0, S = 0, C = 0;
             for(DeckOfCards::Card c : my_Hand){

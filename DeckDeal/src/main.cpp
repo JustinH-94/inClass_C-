@@ -275,6 +275,26 @@ void NextPlayerSetTrump(int TrumpSetter){
     }
 }
 
+
+void PlayerTurn(int dealerVal){
+    int counter  = 0;
+    while(counter < 4){
+        if(dealerVal == 5){
+            dealerVal == 1;
+        }
+        if(dealerVal == 1){
+
+        } else if (dealerVal == 2){
+
+        } else if(dealerVal == 3){
+        
+        } else if(dealerVal == 4){
+
+        }
+        
+    }
+}
+
 int main(){
 
     std::string face[MAX_FACE_COUNT] ={"Ace","9","10","Jack","Queen","King"};
@@ -296,17 +316,14 @@ int main(){
 
         while(allPlayersHaveCards){
             if(!isTrumpSet){
-            std::cout << "No one trumped. Player " << temp++ << " is picking next trump." << std::endl;
-            NextPlayerSetTrump(dealerVal);            
-        }
-            SetBestHand();
-            std:: cout << "The Shown Top Suit is: " << TrumpSuit << std::endl;   
+                std::cout << "No one trumped. Player " << temp++ << " is picking next trump." << std::endl;
+                NextPlayerSetTrump(dealerVal);            
+                SetBestHand();
+            }
+            std::cout << "The Shown Top Suit is: " << TrumpSuit << std::endl;   
             allPlayersHaveCards = false;
+            dealerVal++;
         }
-
-        
-
-        dealerVal++;
         isTrumpSet = false;
     }
 
