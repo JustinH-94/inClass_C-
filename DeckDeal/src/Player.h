@@ -72,10 +72,28 @@ class Player : PlayerHand, Dealer{
             }
         }
 
-        void PlayCard(std::string TrumpSuit){
-            for(DeckOfCards::Card c : my_Hand){
-                
+        DeckOfCards::Card PlayCard(std::string TrumpSuit, std::string secondBestSuit){
+            DeckOfCards::Card temp;
+            for(DeckOfCards::Card c : my_Hand){//searches for best possible card
+                    if(c.suit == TrumpSuit && (c.face == "Jack" || c.face =="Ace")){
+                        my_Hand.erase(my_Hand.begin() + set(c.suit, c.face));
+                        return c;
+                    } else if (c.suit == secondBestSuit && c.face == "Jack"){
+                        return c;
+                    }
             }
+            for(DeckOfCards::Card c : my_Hand){
+                if(c.suit == TrumpSuit){//if no best card is available, then any card with the same trump suit is placed.
+                    return c;
+                }
+            }
+            for(DeckOfCards::Card c : my_Hand){
+                if(c.face != "Jack" || c.face != "Ace"){
+                    return c;
+                }
+            }
+
+            return temp;
         }
 
         std::string SetTrumpSuit(){

@@ -13,6 +13,7 @@ const int MAX_SUIT_COUNT = 4;
 DeckOfCards deck;
 std::vector<DeckOfCards::Card> cardDeck;
 std::vector<DeckOfCards::Card> tempHand;
+std::vector<DeckOfCards::Card> bestHand;
 Player p1;
 Player p2;
 Player p3;
@@ -177,6 +178,7 @@ bool HandRank(int dealVal){
 } 
 
 void SetBestHand(){
+    bestHand.clear();
     for(int i = 0; i < 7; i++){
         DeckOfCards::Card card;
         if(i == 0){
@@ -200,7 +202,8 @@ void SetBestHand(){
         else if (i == 6){
             card = {TrumpSuit, "9"}; 
         }
-        deck.settingBestHand(card);
+        //deck.settingBestHand(card);
+        bestHand.push_back(card);
     }
 }
 
@@ -273,25 +276,33 @@ void NextPlayerSetTrump(int TrumpSetter){
     if(TrumpSetter == 4){
         TrumpSuit = p4.SetTrumpSuit();
     }
+    setSecondBestSuit(TrumpSuit);
+}
+
+void CardPlayed(DeckOfCards::Card c){
+    std::cout << c.face << " of " << c.suit << " was played." << std::endl;
 }
 
 
 void PlayerTurn(int dealerVal){
     int counter  = 0;
     while(counter < 4){
+        DeckOfCards::Card card;
         if(dealerVal == 5){
-            dealerVal == 1;
+            dealerVal = 1;
         }
         if(dealerVal == 1){
-
+            card = p1.PlayCard(TrumpSuit, secondBestSuit);
         } else if (dealerVal == 2){
-
+            card = p2.PlayCard(TrumpSuit, secondBestSuit);
         } else if(dealerVal == 3){
-        
+            card = p3.PlayCard(TrumpSuit, secondBestSuit);
         } else if(dealerVal == 4){
-
+            card = p4.PlayCard(TrumpSuit, secondBestSuit);
         }
-        
+        CardPlayed(card);
+        dealerVal++;
+        counter++;
     }
 }
 
@@ -321,6 +332,7 @@ int main(){
                 SetBestHand();
             }
             std::cout << "The Shown Top Suit is: " << TrumpSuit << std::endl;   
+            PlayerTurn(dealerVal);
             allPlayersHaveCards = false;
             dealerVal++;
         }
