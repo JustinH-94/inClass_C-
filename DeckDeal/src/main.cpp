@@ -114,7 +114,7 @@ std::vector<DeckOfCards::Card> TopSuit(std::vector<DeckOfCards::Card> cardDeck){
 float SetRank(std::vector<DeckOfCards::Card> hand){
     float rankScore = 0;
     for(DeckOfCards::Card c : hand){
-        for(DeckOfCards::Card t : deck.bestHand){
+        for(DeckOfCards::Card t : bestHand){
             if (c.face == t.face && t.suit == c.suit && c.face == "Jack")
             {
                 rankScore += 0.50;
@@ -134,7 +134,7 @@ bool BustOrRedeal(float rank){
     return false;
 }
 
-bool HandRank(int dealVal){
+void HandRank(int dealVal){
     int playerChecked = 0;
     bool playTrump = false;
     for(int i = dealVal; i <= 4; i++){
@@ -163,18 +163,16 @@ bool HandRank(int dealVal){
             playTrump = BustOrRedeal(p4Rank);
             i=0;
         }
-        tempHand.clear();
+        //tempHand.clear();
         if(playTrump){
             std::cout << TrumpSuit << " is being played" << std::endl;
             isTrumpSet = true;
-            return playTrump;
             break;
         }
         
         if(playerChecked == 3){ break;}
         playerChecked++;
     }
-    return false;
 } 
 
 void SetBestHand(){
@@ -283,6 +281,44 @@ void CardPlayed(DeckOfCards::Card c){
     std::cout << c.face << " of " << c.suit << " was played." << std::endl;
 }
 
+void SetPlayerScore(int dealerVal, int cardVal){
+    if(dealerVal == 1){
+        p1.score = cardVal;
+    }else if(dealerVal == 2){
+        p2.score = cardVal;
+    }
+    else if(dealerVal == 3){
+        p3.score = cardVal;
+    }
+    else if(dealerVal == 4){
+        p4.score = cardVal;
+    }
+}
+
+void SetCardVal(DeckOfCards::Card c, int dealerVal){
+    int cardVal = 0;
+        if((c.face == "Jack") && (c.suit == TrumpSuit)){
+            cardVal = bestHand.size();
+        } else if((c.face == "Jack") && (c.suit == secondBestSuit)){
+            cardVal = bestHand.size() - 1;
+        } else if (((c.suit == TrumpSuit) && (c.face == "Ace"))){
+            cardVal = bestHand.size()-2;
+        }
+        else if (((c.suit == TrumpSuit) && (c.face == "King"))){
+            cardVal = bestHand.size()-3;
+        }
+        else if (((c.suit == TrumpSuit) && (c.face == "Queen"))){
+            cardVal = bestHand.size()-4;
+        }
+        else if (((c.suit == TrumpSuit) && (c.face == "10"))){
+            cardVal = bestHand.size()-5;
+        }
+        else{
+            cardVal = bestHand.size()-6;
+        }
+        SetPlayerScore(dealerVal, cardVal);
+}
+
 
 void PlayerTurn(int dealerVal){
     int counter  = 0;
@@ -301,31 +337,45 @@ void PlayerTurn(int dealerVal){
             card = p4.PlayCard(TrumpSuit, secondBestSuit);
         }
         CardPlayed(card);
+        SetCardVal(card, dealerVal);
         dealerVal++;
         counter++;
     }
 }
 
-int main(){
+void PlayerScore(){
+    std::cout << p1.score << " " << p1.RetHandSize()<< std::endl;
+    std::cout << p2.score << " " << p2.RetHandSize()<< std::endl;
+    std::cout << p3.score << " " << p3.RetHandSize()<< std::endl;
+    std::cout << p4.score << " " << p4.RetHandSize()<< std::endl;
+}
 
+void PlayerHandCount(){
+    if(p1.RetHandSize() == 0 &&
+       p2.RetHandSize() == 0 &&
+       p3.RetHandSize() == 0 &&
+       p4.RetHandSize() == 0){
+           allPlayersHaveCards = false;
+       }
+}
+
+int main(){
     std::string face[MAX_FACE_COUNT] ={"Ace","9","10","Jack","Queen","King"};
     std::string suit[MAX_SUIT_COUNT] = {"Spades","Hearts","Diamonds","Clubs"};
-    while(PlayGame()){
         int dealerVal = 1;
         int temp = dealerVal;
+    while(PlayGame()){
         ClearHands();
         cardDeck = deck.initializingDeck(face, suit, MAX_FACE_COUNT, MAX_SUIT_COUNT);
         SetDealer(dealerVal);
         cardDeck = DealCards(cardDeck);
         showHand();
+
+        while(allPlayersHaveCards){
         cardDeck = TopSuit(cardDeck);
         SetBestHand();
         
         HandRank(dealerVal);
-
-        
-
-        while(allPlayersHaveCards){
             if(!isTrumpSet){
                 std::cout << "No one trumped. Player " << temp++ << " is picking next trump." << std::endl;
                 NextPlayerSetTrump(dealerVal);            
@@ -333,10 +383,15 @@ int main(){
             }
             std::cout << "The Shown Top Suit is: " << TrumpSuit << std::endl;   
             PlayerTurn(dealerVal);
-            allPlayersHaveCards = false;
+            PlayerScore();
+            PlayerHandCount();
             dealerVal++;
+            std::cin.get();
+            isTrumpSet = false;
+            if(dealerVal == 5)
+                dealerVal = 1;
         }
-        isTrumpSet = false;
+
     }
 
     

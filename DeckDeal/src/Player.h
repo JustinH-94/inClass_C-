@@ -17,6 +17,7 @@ class Dealer{
 
 class Player : PlayerHand, Dealer{
     public:
+        int score;
         Player(){
 
         }
@@ -55,9 +56,22 @@ class Player : PlayerHand, Dealer{
             isDealer = false;
         }
 
+        int RetHandSize(){
+            return my_Hand.size();
+        }
+
         int set(std::string suit, std::string face){
             for(int i = 0; i < 5; i++){
                 if(my_Hand[i].face == face && my_Hand[i].suit == suit){
+                    return i;
+                }
+            }
+            return 0;
+        }
+
+        int set(std::string suit){
+            for(int i = 0; i < 5; i++){
+                if(my_Hand[i].suit == suit){
                     return i;
                 }
             }
@@ -79,16 +93,19 @@ class Player : PlayerHand, Dealer{
                         my_Hand.erase(my_Hand.begin() + set(c.suit, c.face));
                         return c;
                     } else if (c.suit == secondBestSuit && c.face == "Jack"){
+                        my_Hand.erase(my_Hand.begin() + set(c.suit, c.face));
                         return c;
                     }
             }
             for(DeckOfCards::Card c : my_Hand){
                 if(c.suit == TrumpSuit){//if no best card is available, then any card with the same trump suit is placed.
+                    my_Hand.erase(my_Hand.begin() + set(c.suit, c.face));
                     return c;
                 }
             }
             for(DeckOfCards::Card c : my_Hand){
                 if(c.face != "Jack" || c.face != "Ace"){
+                    my_Hand.erase(my_Hand.begin() + set(c.suit, c.face));
                     return c;
                 }
             }
@@ -126,14 +143,25 @@ class Player : PlayerHand, Dealer{
                 }
             }
 
-            if(H + D > S + C && H > D) 
+            if(H + D > S + C && H > D){
+                my_Hand.erase(my_Hand.begin() + set("Heart"));
                 return "Hearts";
-            else if(D + H > S + C && D > H)
+
+            } 
+            else if(D + H > S + C && D > H){
+                my_Hand.erase(my_Hand.begin() + set("Diamonds"));
                 return "Diamonds";
-            else if(D + H < S + C && S > C)
+  
+            }
+            else if(D + H < S + C && S > C){
+                my_Hand.erase(my_Hand.begin() + set("Spades"));
                 return "Spades";
-            else if(D + H < S + C && C > S)
+
+            }
+            else if(D + H < S + C && C > S){
+                my_Hand.erase(my_Hand.begin() + set("Clubs"));
                 return "Clubs";
+            }
 
             return "";
         }
