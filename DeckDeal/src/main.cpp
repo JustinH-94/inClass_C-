@@ -29,19 +29,21 @@ bool play = true;
 bool isTrumpSet = false;
 bool allPlayersHaveCards = true;
 
-std::vector<DeckOfCards::Card> Deal3Cards(std::vector<DeckOfCards::Card> cardDeck){
-    for(int j = 0; j < 3; j++){
-        for(int i = 0; i < 4; i++){
-            if(i == 0){
+std::vector<DeckOfCards::Card> Deal3Cards(std::vector<DeckOfCards::Card> cardDeck, int dealerVal){
+    for(int j = dealerVal++; j < 5; j++){
+        if(j > 4)
+            j = 1;
+        for(int i = 0; i < 3; i++){
+            if(j == 0){
                 p1.DealCards(cardDeck);
             }
-            else if(i == 1){
+            else if(j == 1){
                 p2.DealCards(cardDeck);
             }
-            else if(i == 2){
+            else if(j == 2){
                 p3.DealCards(cardDeck);
             }
-            else if(i == 3){
+            else if(j == 3){
                 p4.DealCards(cardDeck);
             }
             cardDeck.erase(cardDeck.begin());
@@ -50,8 +52,9 @@ std::vector<DeckOfCards::Card> Deal3Cards(std::vector<DeckOfCards::Card> cardDec
     return cardDeck;  
 }
 
-std::vector<DeckOfCards::Card> Deal2Cards(std::vector<DeckOfCards::Card> cardDeck){
-    for(int j = 0; j < 2; j++){
+std::vector<DeckOfCards::Card> Deal2Cards(std::vector<DeckOfCards::Card> cardDeck, int dealerVal){
+    for(int j = dealerVal++; j < 2; j++){
+        if( j > 4)
             for(int i = 0; i < 4; i++){
                 if(i == 0){
                     p1.DealCards(cardDeck);
@@ -251,9 +254,9 @@ void SetDealer(int dealerVal){
 }
 
 
-std::vector<DeckOfCards::Card> DealCards(std::vector<DeckOfCards::Card> cardDeck){
-    cardDeck = Deal3Cards(cardDeck);
-    cardDeck = Deal2Cards(cardDeck);
+std::vector<DeckOfCards::Card> DealCards(std::vector<DeckOfCards::Card> cardDeck, int dealerVal){
+    cardDeck = Deal3Cards(cardDeck, dealerVal);
+    cardDeck = Deal2Cards(cardDeck, dealerVal);
     return cardDeck;
 }
 
@@ -368,7 +371,7 @@ int main(){
         ClearHands();
         cardDeck = deck.initializingDeck(face, suit, MAX_FACE_COUNT, MAX_SUIT_COUNT);
         SetDealer(dealerVal);
-        cardDeck = DealCards(cardDeck);
+        cardDeck = DealCards(cardDeck, dealerVal);
         showHand();
 
         while(allPlayersHaveCards){
