@@ -113,7 +113,8 @@ class Player : PlayerHand, Dealer{
             return temp;
         }
 
-        std::string SetTrumpSuit(){
+        std::string SetTrumpSuit(DeckOfCards::Card TrumpCard){
+            my_Hand.push_back(TrumpCard);
             int H = 0, D = 0, S = 0, C = 0;
             for(DeckOfCards::Card c : my_Hand){
                 if(c.suit == "Hearts"){
