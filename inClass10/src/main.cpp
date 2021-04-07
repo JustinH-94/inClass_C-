@@ -33,5 +33,5 @@ int main(){
     std::cin >> divisor;
 
     int result = Divide(dividend, divisor);
-    std::cout << result << std::endl;
+    std::cout << result << std::endl << std::endl;
 }
